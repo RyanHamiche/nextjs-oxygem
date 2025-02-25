@@ -7,7 +7,7 @@ export default function Menu() {
       <nav className='flex gap-3 w-full'>
         <Link href='/cart' className='header-button'>
           <UserIcon className='h-8 w-8' />
-          <span className='font-bold'>Sign in</span>
+          <span className='font-bold'>Inscription</span>
         </Link>
 
         <Link href='/cart' className='header-button'>
