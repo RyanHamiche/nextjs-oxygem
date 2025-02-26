@@ -7,11 +7,11 @@ import { APP_NAME } from '@/lib/constants'
 
 export default function Footer() {
   return (
-    <footer className='bg-black  text-white underline-link'>
+    <footer className='bg-[#B8A5F1]  text-[#FFFFFF] underline-link'>
       <div className='w-full'>
         <Button
           variant='ghost'
-          className='bg-gray-800 w-full  rounded-none '
+          className='bg-[#BDBDBD] w-full  rounded-none '
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         >
           <ChevronUp className='mr-2 h-4 w-4' />
@@ -24,11 +24,12 @@ export default function Footer() {
             Conditions d utilisations
           </Link>
           <Link href='/page/faq'>FAQ</Link>
+          <Link href='/page/notre-histoire'>Notre histoire</Link>
         </div>
         <div className='flex justify-center text-sm'>
-          <p> © 2023-2025, {APP_NAME} Studios.</p>
+          <p> © 2023-2025, {APP_NAME} Creations.</p>
         </div>
-        <div className='mt-8 flex justify-center text-sm text-gray-400'>
+        <div className='mt-8 flex justify-center text-sm text-gray-100'>
           France, Région Ile-De-France
         </div>
       </div>

@@ -38,25 +38,25 @@ export function HomeCarousel({
       <CarouselContent>
         {items.map((item) => (
           <CarouselItem key={item.title}>
-            <Link href={item.url}>
-              <div className='flex aspect-[16/6] items-center justify-center p-6 relative -m-1'>
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  className='object-cover'
-                  priority
-                />
-                <div className='absolute w-1/4 left-10 md:left-32 top-1/3 transform -translate-y-1/2 text-center'>
-                  <h2 className='text-xl md:text-6xl font-bold mb-4 text-primary'>
-                    {item.title}
-                  </h2>
+            <div className='flex aspect-[16/6] items-center justify-center p-6 relative -m-1'>
+              <Image
+                src={item.image}
+                alt={item.title}
+                fill
+                className='object-cover'
+                priority
+              />
+              <div className='absolute w-1/4 left-10 md:left-32 top-1/3 transform -translate-y-1/2 text-center'>
+                <h2 className='text-xl md:text-6xl font-bold mb-4 text-primary'>
+                  {item.title}
+                </h2>
+                <Link href={item.url}>
                   <Button className='hidden md:inline-block'>
                     {item.buttonCaption}
                   </Button>
-                </div>
+                </Link>
               </div>
-            </Link>
+            </div>
           </CarouselItem>
         ))}
       </CarouselContent>

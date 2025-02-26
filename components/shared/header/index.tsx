@@ -9,7 +9,7 @@ import Search from './search'
 
 export default function Header() {
   return (
-    <header className='bg-black  text-white'>
+    <header className='bg-[#B8A5F1]  text-[#FFFFFF]'>
       <div className='px-2'>
         <div className='flex items-center justify-between'>
           <div className='flex items-center'>
@@ -35,7 +35,7 @@ export default function Header() {
           <Search />
         </div>
       </div>
-      <div className='flex items-center px-3 mb-[1px]  bg-gray-800'>
+      <div className='flex items-center px-3 mb-[1px]  bg-[#BDBDBD]'>
         <Button
           variant='ghost'
           className='header-button flex items-center gap-1 text-base [&_svg]:size-6'
