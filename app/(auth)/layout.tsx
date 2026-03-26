@@ -16,6 +16,7 @@ export default function AuthLayout({
             width={40}
             height={40}
             alt={`${APP_NAME} logo`}
+            style={{ width: 40, height: 'auto' }}
           />
           <span className='text-2xl font-bold text-primary'>{APP_NAME}</span>
         </Link>

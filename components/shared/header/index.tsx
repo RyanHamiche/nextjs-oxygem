@@ -22,6 +22,7 @@ export default function Header() {
                 width={40}
                 height={40}
                 alt={`${APP_NAME} logo`}
+                style={{ width: 40, height: 'auto' }}
               />
               {APP_NAME}
             </Link>
