@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
+import { APP_DESCRIPTION, APP_NAME, APP_SLOGAN } from '@/lib/constants'
+import { Toaster } from '@/components/ui/sonner'
+import SessionWrapper from '@/components/shared/session-wrapper'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -12,7 +15,6 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 })
 
-import { APP_DESCRIPTION, APP_NAME, APP_SLOGAN } from '@/lib/constants'
 export const metadata: Metadata = {
   title: {
     template: `%s | ${APP_NAME}`,
@@ -27,11 +29,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang='en'>
+    <html lang='fr'>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <SessionWrapper>
+          {children}
+        </SessionWrapper>
+        <Toaster richColors position='top-right' />
       </body>
     </html>
   )

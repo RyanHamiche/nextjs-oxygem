@@ -1,6 +1,35 @@
 import { z } from 'zod'
 import { formatNumberWithDecimal } from './utils'
 
+export const UserSignUpSchema = z
+  .object({
+    name: z.string().min(2, 'Le nom doit contenir au moins 2 caractères'),
+    email: z.string().email('Adresse email invalide'),
+    password: z
+      .string()
+      .min(6, 'Le mot de passe doit contenir au moins 6 caractères'),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Les mots de passe ne correspondent pas',
+    path: ['confirmPassword'],
+  })
+
+export const UserSignInSchema = z.object({
+  email: z.string().email('Adresse email invalide'),
+  password: z.string().min(1, 'Le mot de passe est requis'),
+})
+
+export const ShippingAddressSchema = z.object({
+  fullName: z.string().min(2, 'Le nom complet est requis'),
+  address: z.string().min(3, "L'adresse est requise"),
+  city: z.string().min(2, 'La ville est requise'),
+  postalCode: z.string().min(4, 'Le code postal est requis'),
+  country: z.string().min(2, 'Le pays est requis'),
+})
+
+export type IShippingAddress = z.infer<typeof ShippingAddressSchema>
+
 // Common
 const Price = (field: string) =>
   z.coerce
