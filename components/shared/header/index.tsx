@@ -19,8 +19,8 @@ export default function Header() {
             >
               <Image
                 src='/icons/oxygemlogo.svg'
-                width={40}
-                height={40}
+                width={315}
+                height={223}
                 alt={`${APP_NAME} logo`}
                 style={{ width: 40, height: 'auto' }}
               />

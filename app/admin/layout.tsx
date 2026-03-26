@@ -22,8 +22,8 @@ export default function AdminLayout({
         <div className='p-4 flex items-center gap-2'>
           <Image
             src='/icons/oxygemlogo.svg'
-            width={32}
-            height={32}
+            width={315}
+            height={223}
             alt={APP_NAME}
             style={{ width: 32, height: 'auto' }}
           />
