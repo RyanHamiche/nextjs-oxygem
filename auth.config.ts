@@ -30,10 +30,14 @@ export const authConfig = {
 
       return true
     },
-    jwt({ token, user }) {
+    jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id
         token.role = user.role
+        token.name = user.name
+      }
+      if (trigger === 'update' && session?.name) {
+        token.name = session.name
       }
       return token
     },

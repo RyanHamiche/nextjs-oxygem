@@ -10,6 +10,7 @@ import { updateProfile } from '@/lib/actions/user.actions'
 import { toast } from 'sonner'
 import { Loader2, Eye, EyeOff } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 
 export default function ProfileForm({
   user,
@@ -17,6 +18,7 @@ export default function ProfileForm({
   user: { name?: string | null; email?: string | null }
 }) {
   const router = useRouter()
+  const { update } = useSession()
   const [loading, setLoading] = useState(false)
   const [showCurrent, setShowCurrent] = useState(false)
   const [showNew, setShowNew] = useState(false)
@@ -42,6 +44,7 @@ export default function ProfileForm({
     if (!result.success) {
       toast.error(result.error)
     } else {
+      await update({ name: values.name })
       toast.success('Profil mis à jour')
       router.refresh()
     }
