@@ -4,6 +4,8 @@ import Image from 'next/image'
 import { LayoutDashboardIcon, PackageIcon, ShoppingBagIcon } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 import AdminSignOut from '@/components/shared/admin/admin-sign-out'
+import { auth } from '@/auth'
+import { redirect } from 'next/navigation'
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboardIcon },
@@ -11,11 +13,16 @@ const navItems = [
   { href: '/admin/orders', label: 'Commandes', icon: ShoppingBagIcon },
 ]
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const session = await auth()
+  if (!session?.user || (session.user as { role?: string }).role !== 'admin') {
+    redirect('/sign-in?callbackUrl=/admin')
+  }
+
   return (
     <div className='flex min-h-screen bg-background'>
       <aside className='w-60 flex-shrink-0 border-r border-border bg-card flex flex-col'>
