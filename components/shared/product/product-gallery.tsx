@@ -64,12 +64,12 @@ export default function ProductGallery({
 
         {/* Miniatures */}
         {images.length > 1 && (
-          <div className='flex gap-2 flex-wrap'>
+          <div className='flex gap-2 md:gap-3 flex-wrap'>
             {images.map((img, i) => (
               <button
                 key={i}
                 onClick={() => setSelected(i)}
-                className={`relative h-16 w-16 rounded-xl overflow-hidden bg-secondary/40 flex-shrink-0 transition-all duration-200 ${
+                className={`relative h-16 w-16 md:h-24 md:w-24 rounded-xl overflow-hidden bg-secondary/40 flex-shrink-0 transition-all duration-200 ${
                   selected === i
                     ? 'ring-2 ring-primary ring-offset-2 scale-105'
                     : 'opacity-60 hover:opacity-100'
@@ -79,7 +79,7 @@ export default function ProductGallery({
                   src={img}
                   alt={`${name} ${i + 1}`}
                   fill
-                  sizes='64px'
+                  sizes='(max-width: 768px) 64px, 96px'
                   className='object-cover'
                 />
               </button>

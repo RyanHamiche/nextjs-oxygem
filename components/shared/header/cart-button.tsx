@@ -17,6 +17,13 @@ export default function CartButton() {
       return
     }
     getCartItemCount().then(setItemCount)
+
+    const onCartUpdated = (e: Event) => {
+      const count = (e as CustomEvent<number>).detail
+      if (typeof count === 'number') setItemCount(count)
+    }
+    window.addEventListener('cart-updated', onCartUpdated)
+    return () => window.removeEventListener('cart-updated', onCartUpdated)
   }, [session?.user?.id])
 
   return (

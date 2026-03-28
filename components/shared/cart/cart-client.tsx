@@ -21,8 +21,12 @@ export default function CartClient({ cart }: { cart: ICart }) {
     setLoadingId(productId)
     startTransition(async () => {
       const res = await removeFromCart(productId)
-      if (res.success) toast.success('Article retiré')
-      else toast.error(res.error)
+      if (res.success) {
+        toast.success('Article retiré')
+        window.dispatchEvent(new CustomEvent('cart-updated', { detail: res.cartItemCount }))
+      } else {
+        toast.error(res.error)
+      }
       setLoadingId(null)
     })
   }
@@ -30,7 +34,10 @@ export default function CartClient({ cart }: { cart: ICart }) {
   const handleQtyChange = (productId: string, qty: number) => {
     setLoadingId(productId)
     startTransition(async () => {
-      await updateCartQty(productId, qty)
+      const res = await updateCartQty(productId, qty)
+      if (res.success) {
+        window.dispatchEvent(new CustomEvent('cart-updated', { detail: res.cartItemCount }))
+      }
       setLoadingId(null)
     })
   }

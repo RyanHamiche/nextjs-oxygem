@@ -19,9 +19,11 @@ import { Button } from '@/components/ui/button'
 import { createProduct, updateProduct } from '@/lib/actions/product.actions'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
-import { Loader2 } from 'lucide-react'
+import { Loader2, UploadIcon, XIcon } from 'lucide-react'
 import { IProduct } from '@/lib/db/models/product.model'
 import { toSlug } from '@/lib/utils'
+import { useRef, useState } from 'react'
+import Image from 'next/image'
 
 type ProductFormValues = z.infer<typeof ProductInputSchema>
 
@@ -32,6 +34,33 @@ export default function ProductForm({
 }) {
   const router = useRouter()
   const isEdit = !!product
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [uploading, setUploading] = useState(false)
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files || files.length === 0) return
+
+    setUploading(true)
+    const current = form.getValues('images')
+
+    for (const file of Array.from(files)) {
+      const fd = new FormData()
+      fd.append('file', file)
+      try {
+        const res = await fetch('/api/upload', { method: 'POST', body: fd })
+        const data = await res.json()
+        if (!res.ok) throw new Error(data.error ?? 'Erreur upload')
+        form.setValue('images', [...current, data.url], { shouldValidate: true })
+        current.push(data.url)
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : 'Erreur upload')
+      }
+    }
+
+    setUploading(false)
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
 
   const form = useForm<ProductFormValues>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -178,14 +207,57 @@ export default function ProductForm({
             control={form.control}
             name='images'
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Images (URLs séparées par des virgules)</FormLabel>
+              <FormItem className='md:col-span-2'>
+                <FormLabel>Images</FormLabel>
                 <FormControl>
-                  <CommaSeparatedInput
-                    value={field.value}
-                    onChange={field.onChange}
-                    placeholder='/images/p1.jpg, /images/p1-hover.jpg'
-                  />
+                  <div className='space-y-3'>
+                    {/* Prévisualisation */}
+                    {field.value.length > 0 && (
+                      <div className='flex flex-wrap gap-3'>
+                        {field.value.map((url, i) => (
+                          <div key={i} className='relative group h-20 w-20 rounded-xl overflow-hidden border bg-secondary/40 flex-shrink-0'>
+                            <Image src={url} alt={`image ${i + 1}`} fill sizes='80px' className='object-cover' />
+                            <button
+                              type='button'
+                              onClick={() => field.onChange(field.value.filter((_, j) => j !== i))}
+                              className='absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity'
+                            >
+                              <XIcon className='h-5 w-5 text-white' />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Bouton upload */}
+                    <input
+                      ref={fileInputRef}
+                      type='file'
+                      accept='image/*'
+                      multiple
+                      className='hidden'
+                      onChange={handleUpload}
+                    />
+                    <Button
+                      type='button'
+                      variant='outline'
+                      size='sm'
+                      disabled={uploading}
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      {uploading
+                        ? <Loader2 className='h-4 w-4 animate-spin mr-2' />
+                        : <UploadIcon className='h-4 w-4 mr-2' />}
+                      Ajouter une image
+                    </Button>
+
+                    {/* Saisie manuelle */}
+                    <CommaSeparatedInput
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder='/images/p1.jpg, /images/p1-hover.jpg'
+                    />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>

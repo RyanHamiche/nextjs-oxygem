@@ -18,6 +18,13 @@ const ProductCard = ({
   hideDetails?: boolean
   hideBorder?: boolean
 }) => {
+  const isNewProduct = (() => {
+    const createdAt = new Date(product.createdAt).getTime()
+    if (Number.isNaN(createdAt)) return false
+    const oneWeekInMs = 7 * 24 * 60 * 60 * 1000
+    return Date.now() - createdAt < oneWeekInMs
+  })()
+
   const ProductImage = () => (
     <Link href={`/product/${product.slug}`}>
       <div className='relative w-full aspect-square rounded-xl overflow-hidden bg-secondary/40 group'>
@@ -35,6 +42,16 @@ const ProductCard = ({
             sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
             className='object-cover group-hover:scale-105 transition-transform duration-500'
           />
+        )}
+        {isNewProduct && (
+          <span className='absolute top-2 left-2 text-white text-[10px] font-bold px-2 py-0.5 rounded bg-[#309CF2]'>
+            New
+          </span>
+        )}
+        {product.listPrice > 0 && (
+          <span className='absolute bottom-2 left-2 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded'>
+            Promo
+          </span>
         )}
       </div>
     </Link>

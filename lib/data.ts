@@ -161,7 +161,7 @@ const data: Data = {
     {
       title: 'Bienvenue sur Oxygemstudio',
       buttonCaption: 'Acheter',
-      image: '/images/banner31a.jpg',
+      image: '/images/banner31b.png',
       url: '/search?category=Ongles',
       isPublished: true,
     },

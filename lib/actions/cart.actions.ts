@@ -19,6 +19,7 @@ export async function addToCart(productId: string, qty = 1) {
   await connectToDatabase()
   const product = await Product.findById(productId)
   if (!product) return { success: false, error: 'Produit introuvable' }
+  if (!product.isPublished) return { success: false, error: 'Ce produit n\'est plus disponible' }
 
   let cart = await Cart.findOne({ userId: session.user.id })
   if (!cart) {
@@ -45,7 +46,8 @@ export async function addToCart(productId: string, qty = 1) {
   cart.totalPrice = calcTotal(cart.items)
   await cart.save()
   revalidatePath('/cart')
-  return { success: true }
+  const cartItemCount = cart.items.reduce((sum: number, i: { qty: number }) => sum + i.qty, 0)
+  return { success: true, cartItemCount }
 }
 
 export async function removeFromCart(productId: string) {
@@ -62,7 +64,8 @@ export async function removeFromCart(productId: string) {
   cart.totalPrice = calcTotal(cart.items)
   await cart.save()
   revalidatePath('/cart')
-  return { success: true }
+  const cartItemCount = cart.items.reduce((sum: number, i: { qty: number }) => sum + i.qty, 0)
+  return { success: true, cartItemCount }
 }
 
 export async function updateCartQty(productId: string, qty: number) {
@@ -89,7 +92,8 @@ export async function updateCartQty(productId: string, qty: number) {
   cart.totalPrice = calcTotal(cart.items)
   await cart.save()
   revalidatePath('/cart')
-  return { success: true }
+  const cartItemCount = cart.items.reduce((sum: number, i: { qty: number }) => sum + i.qty, 0)
+  return { success: true, cartItemCount }
 }
 
 export async function getCart() {
@@ -99,6 +103,23 @@ export async function getCart() {
   await connectToDatabase()
   const cart = await Cart.findOne({ userId: session.user.id })
   if (!cart) return null
+
+  // Retirer les produits qui ne sont plus publiés
+  const productIds = cart.items.map((i: { productId: string }) => i.productId)
+  const publishedProducts = await Product.find(
+    { _id: { $in: productIds }, isPublished: true },
+    { _id: 1 }
+  ).lean()
+  const publishedIds = new Set(publishedProducts.map((p: { _id: unknown }) => String(p._id)))
+
+  const originalCount = cart.items.length
+  cart.items = cart.items.filter((i: { productId: string }) => publishedIds.has(i.productId))
+
+  if (cart.items.length !== originalCount) {
+    cart.totalPrice = calcTotal(cart.items)
+    await cart.save()
+  }
+
   return JSON.parse(JSON.stringify(cart))
 }
 

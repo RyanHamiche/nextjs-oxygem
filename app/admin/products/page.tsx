@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge'
 import { PlusIcon } from 'lucide-react'
 import { IProduct } from '@/lib/db/models/product.model'
 import { formatCurrency } from '@/lib/utils'
-import DeleteProductButton from '@/components/shared/admin/delete-product-button'
+import TogglePublishedButton from '@/components/shared/admin/toggle-published-button'
 import Image from 'next/image'
 import { Metadata } from 'next'
 
@@ -44,7 +44,7 @@ export default async function AdminProductsPage() {
               <TableHead>Produit</TableHead>
               <TableHead>Catégorie</TableHead>
               <TableHead>Prix</TableHead>
-              <TableHead>Statut</TableHead>
+              <TableHead>Afficher sur le site</TableHead>
               <TableHead>Ventes</TableHead>
               <TableHead className='text-right'>Actions</TableHead>
             </TableRow>
@@ -80,13 +80,10 @@ export default async function AdminProductsPage() {
                   {formatCurrency(product.price)}
                 </TableCell>
                 <TableCell>
-                  {product.isPublished ? (
-                    <Badge className='bg-green-100 text-green-700 hover:bg-green-100'>
-                      Publié
-                    </Badge>
-                  ) : (
-                    <Badge variant='secondary'>Brouillon</Badge>
-                  )}
+                  <TogglePublishedButton
+                    productId={product._id}
+                    isPublished={product.isPublished}
+                  />
                 </TableCell>
                 <TableCell>{product.numSales}</TableCell>
                 <TableCell className='text-right'>
@@ -96,7 +93,6 @@ export default async function AdminProductsPage() {
                         Modifier
                       </Link>
                     </Button>
-                    <DeleteProductButton productId={product._id} />
                   </div>
                 </TableCell>
               </TableRow>
