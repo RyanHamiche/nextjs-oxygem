@@ -1,31 +1,22 @@
 import { SearchIcon } from 'lucide-react'
 import { Input } from '@/components/ui/input'
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { APP_NAME } from '@/lib/constants'
 const categories = ['Ongles', 'Gel', 'Colle', 'Accessoires']
-export default async function Search() {
+export default function Search() {
   return (
     <form action='/search' method='GET' className='flex items-stretch h-10'>
-      <Select name='category'>
-        <SelectTrigger className='w-auto h-full dark:border-gray-200 bg-gray-100 text-black border-r  rounded-r-none rounded-l-md rtl:rounded-r-md rtl:rounded-l-none  '>
-          <SelectValue placeholder='All' />
-        </SelectTrigger>
-        <SelectContent position='popper'>
-          <SelectItem value='all'>All</SelectItem>
-          {categories.map((category) => (
-            <SelectItem key={category} value={category}>
-              {category}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <select
+        name='category'
+        defaultValue='all'
+        className='w-28 md:w-36 h-full rounded-r-none rounded-l-md border border-r-0 border-gray-200 bg-gray-100 px-2 text-sm text-black'
+      >
+        <option value='all'>All</option>
+        {categories.map((category) => (
+          <option key={category} value={category}>
+            {category}
+          </option>
+        ))}
+      </select>
       <Input
         className='flex-1 rounded-none dark:border-gray-200 bg-gray-100 text-black text-base h-full'
         placeholder={`Rechercher sur ${APP_NAME}`}
